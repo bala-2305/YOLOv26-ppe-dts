@@ -2,6 +2,9 @@
 
 A Streamlit application for real-time PPE (Personal Protective Equipment) detection using the YOLO26 model.
 
+![PPE Detection Demo](image.png)
+
+
 ## Prerequisites
 
 - Python (>=3.8)
