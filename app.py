@@ -45,9 +45,21 @@ if source == "Image Upload":
         st.subheader("Safety Checklist")
         labels = results[0].boxes.cls.tolist()
         names = model.names
-        if labels:
-            for label in set(labels):
-                st.write(f"✅ Detected: **{names[int(label)]}**")
+        total = len(labels)
+        # display counts per class
+        if total:
+            st.write(f"🔢 Total objects detected: **{total}**")
+            counts = {}
+            for lbl in labels:
+                name = names[int(lbl)]
+                counts[name] = counts.get(name, 0) + 1
+            for name, cnt in counts.items():
+                st.write(f"- {name}: {cnt}")
+            # simple danger check: look for keywords
+            danger_keywords = ["danger", "hazard", "no ", "missing", "unsafe"]
+            danger_count = sum(cnt for name, cnt in counts.items() if any(kw in name.lower() for kw in danger_keywords))
+            if danger_count:
+                st.warning(f"⚠️ Objects in danger-related classes: {danger_count}")
         else:
             st.write("❌ **No PPE detected**")
 
@@ -73,12 +85,19 @@ elif source == "Webcam (Live)":
         res_plotted = results[0].plot()
         FRAME_WINDOW.image(res_plotted)
 
-        # feedback when nothing detected
+        # feedback when nothing detected and show summary
         labels = results[0].boxes.cls.tolist()
         if not labels:
             status_text.warning("No PPE detected in current frame.")
         else:
-            status_text.empty()
+            total = len(labels)
+            counts = {}
+            for lbl in labels:
+                name = model.names[int(lbl)]
+                counts[name] = counts.get(name, 0) + 1
+            danger_keywords = ["danger", "hazard", "no ", "missing", "unsafe"]
+            danger_count = sum(cnt for name, cnt in counts.items() if any(kw in name.lower() for kw in danger_keywords))
+            status_text.info(f"Detected {total} object(s){' – danger: '+str(danger_count) if danger_count else ''}")
     else:
         camera.release()
         st.write("Webcam Stopped.")

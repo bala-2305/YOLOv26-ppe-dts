@@ -6,7 +6,7 @@ A Streamlit application for real-time PPE (Personal Protective Equipment) detect
 
 # Dataset and annotations
 
-![PPE Detection Demo](ds.avif)
+![PPE Dataset](ds.avif)
 ## Prerequisites
 
 - Python (>=3.8)
