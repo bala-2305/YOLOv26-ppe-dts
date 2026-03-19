@@ -4,24 +4,18 @@ import numpy as np
 from ultralytics import YOLO
 from PIL import Image
 
-# --- App Config ---
 st.set_page_config(page_title="PPE Safety Monitor - YOLO26", layout="wide")
 st.title("🚧 Real-Time PPE Detection (YOLO26)")
 st.sidebar.header("Settings")
 
-# --- Load YOLO26 Model ---
-# Replace 'best.pt' with your custom trained PPE model path if different
 @st.cache_resource
 def load_model():
-    # using 'best.pt' by default as your trained PPE model
     return YOLO("best.pt") 
 
 model = load_model()
 
-# Confidence threshold slider
 conf_threshold = st.sidebar.slider("Confidence Threshold", 0.0, 1.0, 0.45)
 
-# --- Source Selection ---
 source = st.sidebar.radio("Select Source", ("Image Upload", "Webcam (Live)"))
 
 if source == "Image Upload":
@@ -29,13 +23,11 @@ if source == "Image Upload":
     
     if uploaded_file is not None:
         img = Image.open(uploaded_file)
-        # Convert PIL to OpenCV format
+
         img_array = np.array(img)
         
-        # Run Inference
         results = model.predict(source=img_array, conf=conf_threshold)
         
-        # Plot results
         res_plotted = results[0].plot()
         
         # display result image; specify a fixed width instead of deprecated use_column_width
