@@ -5,7 +5,7 @@ from ultralytics import YOLO
 from PIL import Image
 
 st.set_page_config(page_title="PPE Safety Monitor - YOLO26", layout="wide")
-st.title("🚧 Real-Time PPE Detection (YOLO26)")
+st.title("Real-Time PPE Detection (YOLO26)")
 st.sidebar.header("Settings")
 
 @st.cache_resource
